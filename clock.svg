@@ -39,8 +39,7 @@
         <text x="50%" y="35%" class="brand">Bodhimbo</text>
     </g>
     <!-- Minute hand -->
-    <path id="minuteHand" fill="#2b2b2b" d="M 500 500 m 8 0 l 0 -400 l -8 -30 l -8 30 L 492 500 z" />
-
+    <path id="minuteHand" fill="#2b2b2b" d="M 500 500 m 8 30 l 0 -410 l -8 -30 l -8 30 L 492 530 z" />
     <!-- Hand center piece -->
     <circle cx="50%" cy="50%" r="20px" fill="#2b2b2b" />
 
