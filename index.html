@@ -63,8 +63,8 @@
 </head>
 <body>
     <div class="container">
-        <h1>短針のない時計</h1>
-        <object id="clock" type="image/svg+xml" alt="短針がない代わりに文字盤が逆回転して現在時刻を指す時計" data="clock.svg" width="500px" height="500px">
+        <h1>短針が動かない時計</h1>
+        <object id="clock" type="image/svg+xml" alt="短針が動かない代わりに文字盤が逆転して現在時刻を指す時計" data="clock.svg" width="500px" height="500px">
             お使いのブラウザはSVGをサポートしていません。
         </object>
         <div class="embedForm">
@@ -97,8 +97,8 @@
         function generateEmbedCode(size, lang){
             const host = "https://lakiryt.com/single-handed-clock/"
             const path = host + "clock.svg";
-            const alt = (lang == "JA") ? "短針がない代わりに文字盤が逆回転して現在時刻を指す時計"
-                : "A clock indicating the current time without an hour hand, but with the face rotating in the opposite direction";
+            const alt = (lang == "JA") ? "短針が動かない代わりに文字盤が逆転して現在時刻を指す時計"
+                : "A clock indicating time with a backwards moving face instead of the hour hand moving forward";
             const errMsg = (lang == "JA") ? "お使いのブラウザはSVGをサポートしていません。" : "Your browser does not support SVG.";
             return `<object type="image/svg+xml" width="${size}px" height="${size}px" data="${path}" alt="${alt}">${errMsg}</object>`;
         }

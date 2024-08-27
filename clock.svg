@@ -40,6 +40,8 @@
     </g>
     <!-- Minute hand -->
     <path id="minuteHand" fill="#2b2b2b" d="M 500 500 m 8 30 l 0 -410 l -8 -30 l -8 30 L 492 530 z" />
+    <!-- Hour hand -->
+    <path id="hourHand" fill="#2b2b2b" d="M 500 500 m 8 30 l 0 -220 l -8 -30 l -8 30 L 492 530 z" />
     <!-- Hand center piece -->
     <circle cx="50%" cy="50%" r="20px" fill="#2b2b2b" />
 
