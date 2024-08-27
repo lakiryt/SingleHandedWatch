@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200..900&display=swap" rel="stylesheet">
+
+    <title>短針のない時計</title>
+
+    <style>
+         .container {
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            flex-direction: column; /* Vertical direction */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            gap: 30px;
+        }
+        h1 {
+            margin: 0;
+            font-family: "Noto Serif JP", serif;
+            font-optical-sizing: auto;
+            font-weight: 500;
+            font-style: normal;
+        }
+        .embedForm {
+            font-family: "Noto Serif JP", serif;
+            font-optical-sizing: auto;
+            font-weight: 500;
+            font-style: normal;
+        }
+        #embedCodeTextArea {
+            resize: none;
+            width: 300px;
+            height: 50px;
+        }
+        button {
+            background-color: #eeeaec;
+            color: #262626;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #ebe5e8;
+        }
+        .fade-text {
+            opacity: 0;
+            transition: opacity 1s;
+            margin-top: 10px;
+            font-size: 18px;
+        }
+        .fade-text.show {
+            opacity: 1;
+            transition: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>短針のない時計</h1>
+        <object id="clock" type="image/svg+xml" alt="短針がない代わりに文字盤が逆回転して現在時刻を指す時計" data="clock.svg" width="500px" height="500px">
+            お使いのブラウザはSVGをサポートしていません。
+        </object>
+        <div class="embedForm">
+            <label for="clockSizeSlider">埋め込みサイズ：</label>
+            <input type="range" id="clockSizeSlider" name="clockSizeSlider" min="50" max="1000" value="500">
+            <span id="clockSizeText">500</span>
+            <br>
+            <label for="checkbox">代替テキストを英語にする：</label>
+            <input type="checkbox" id="englishToggle" name="englishToggle">
+            <br>
+            <textarea id="embedCodeTextArea" readonly></textarea>
+            <br>
+            <button onclick="copyToClipboard(600)">埋め込みコードをコピー</button>
+            <span id="fadingCopyConfirm" class="fade-text">コードがコピーされました。</span>
+        </div>
+    </div>
+    <script>
+        // DOM elements //
+        const clock = document.getElementById('clock');
+        const clockSizeSlider = document.getElementById('clockSizeSlider');
+        const clockSizeText = document.getElementById('clockSizeText');
+        const englishToggle = document.getElementById('englishToggle');
+        const fadingCopyConfirm = document.getElementById('fadingCopyConfirm');
+        const embedCodeTextArea = document.getElementById('embedCodeTextArea');
+
+        /** Returns string of embed html
+         * int size: size of embedded clock in pixels
+         * string lang: language of alt text and error message 
+        **/  
+        function generateEmbedCode(size, lang){
+            const host = "https://lakiryt.com/single-handed-clock/"
+            const path = host + "clock.svg";
+            const alt = (lang == "JA") ? "短針がない代わりに文字盤が逆回転して現在時刻を指す時計"
+                : "A clock indicating the current time without an hour hand, but with the face rotating in the opposite direction";
+            const errMsg = (lang == "JA") ? "お使いのブラウザはSVGをサポートしていません。" : "Your browser does not support SVG.";
+            return `<object type="image/svg+xml" width="${size}px" height="${size}px" data="${path}" alt="${alt}">${errMsg}</object>`;
+        }
+
+        /** Sets the clock size and the related form values
+         * int size: size of clock in pixels
+        **/
+        function changeClockSizeTo(size){
+            clockSizeSlider.setAttribute("value", size);
+            clockSizeText.textContent = size;
+            embedCodeTextArea.textContent = generateEmbedCode(size, englishToggle.checked ? "EN" : "JA");
+            clock.setAttribute("width", size);
+            clock.setAttribute("height", size);
+        }
+
+        // Initialize clock size and textarea
+        let viewportWidth = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+        let initialClockSize = Math.min(500, Math.round(0.8 * viewportWidth));
+        embedCodeTextArea.textContent = generateEmbedCode(initialClockSize, "JA");
+        changeClockSizeTo(initialClockSize);
+
+        // Form actions //
+        // Change actual clock size and embed code clock size
+        clockSizeSlider.addEventListener('input', () => changeClockSizeTo(clockSizeSlider.value));
+        englishToggle.addEventListener('change', () => {
+            embedCodeTextArea.textContent = generateEmbedCode(clockSizeSlider.value, englishToggle.checked ? "EN" : "JA");
+        });
+        // Copies code to clipboard, displays confirmation and starts fading out the message after a delay.
+        // int msgFadeDelay: in ms, duration the confirmation message is displayed before the fading out starts
+        function copyToClipboard(msgFadeDelay) {            
+            // Select the text in the textarea
+            embedCodeTextArea.select();
+            embedCodeTextArea.setSelectionRange(0, 99999); // For mobile devices
+            
+            // Copy the text to the clipboard
+            document.execCommand("copy");
+            
+            // Display copy confirmation
+            fadingCopyConfirm.classList.add("show"); // Show the text
+            // Fade out
+            setTimeout(() => {
+                fadingCopyConfirm.classList.remove("show"); // removing show class
+            }, msgFadeDelay);
+        }
+    </script>
+</body>
+</html>

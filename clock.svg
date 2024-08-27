@@ -1,0 +1,120 @@
+<!--
+  © 2024 Taro Yoshioka.
+  Unauthorized copying or distribution is prohibited.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1000" height="1000"
+    viewBox="0 0 1000 1000">
+
+    <defs>
+        <style type="text/css">
+            @import url('https://fonts.googleapis.com/css?family=Cormorant+Garamond:wght@500;700');
+        </style>
+    </defs>
+
+    <style>
+        .faceNumber {
+            text-anchor: middle;
+            font-size: 165px;
+            font-family: "Cormorant Garamond", serif;
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        .brand {
+            text-anchor: middle;
+            font-size: 60px;
+            font-family: "Cormorant Garamond", serif;
+            font-weight: 700;
+            font-style: normal;
+        }
+    </style>
+
+    <!-- ### SVG OBJECTS ### -->
+
+    <g id="face">
+        <!-- Background & border -->
+        <circle cx="50%" cy="50%" r="490px" fill="#eeeaec" stroke="#262626" stroke-width="20px" />
+        <circle cx="50%" cy="50%" r="300px" fill="#ebe5e8" />
+        <!-- Brand name -->
+        <text x="50%" y="35%" class="brand">Bodhimbo</text>
+    </g>
+    <!-- Minute hand -->
+    <path id="minuteHand" fill="#2b2b2b" d="M 500 500 m 8 0 l 0 -400 l -8 -30 l -8 30 L 492 500 z" />
+
+    <!-- Hand center piece -->
+    <circle cx="50%" cy="50%" r="20px" fill="#2b2b2b" />
+
+
+    <!-- ### SCRIPT ### -->
+
+    <script>
+        // <![CDATA[
+
+        // Properties
+        const svgSize = 1000;
+        const centerXY = svgSize/2;
+        const faceNumberDefaultX = centerXY;
+        const faceNumberDefaultY = 135;
+        const faceMarkWidth = 4;
+        const faceMarkHeight = 8;
+        const faceMarkDefaultX = centerXY - faceMarkWidth / 2;
+        const faceMarkDefaultY = 140;
+        // Objects
+        const face = document.getElementById('face');
+        const minuteHand = document.getElementById('minuteHand');
+        // Initialize SVG
+        // Face Numbers
+        const svgNS = "http://www.w3.org/2000/svg"; // SVG namespace
+        for (var i = 1; i <=12; i++) {
+            const faceNumber = document.createElementNS(svgNS, 'text');
+            faceNumber.textContent = i;
+            faceNumber.setAttribute("class", "faceNumber");
+            faceNumber.setAttribute("x", faceNumberDefaultX + "px");
+            faceNumber.setAttribute("y", faceNumberDefaultY + "px");
+            faceNumber.setAttribute("transform", `rotate(${30*i} ${centerXY} ${centerXY})`);
+
+            face.appendChild(faceNumber);
+        }
+
+        // Face markings
+        for (var i = 1; i < 60; i++) {
+            if (i % 5 == 0) continue;
+            const faceMark = document.createElementNS(svgNS, 'rect');
+            faceMark.setAttribute("fill", "#2b2b2b");
+            faceMark.setAttribute("x", faceMarkDefaultX + "px");
+            faceMark.setAttribute("y", faceMarkDefaultY + "px");
+            faceMark.setAttribute("width", faceMarkWidth + "px");
+            faceMark.setAttribute("height", faceMarkHeight + "px");
+            faceMark.setAttribute("transform", `rotate(${6*i} ${centerXY} ${centerXY})`);
+
+            face.appendChild(faceMark);
+        }
+
+
+        // ** Updating the time ** //
+
+        const secsPerHalfDay = 12*60*60;
+        const secsPerMinHandRevo = secsPerHalfDay / 11;
+
+        function updateTime() {
+            const now = new Date();
+            let hours = now.getHours() % 12;
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+            let currentSecs = seconds + 60 * (minutes + 60 * hours);
+            let faceRotInDegs = 360 * (- currentSecs / secsPerHalfDay);
+            let minHandRotInDegs = 360 * (currentSecs % secsPerMinHandRevo / secsPerMinHandRevo);
+    
+            face.setAttribute('transform', `rotate(${faceRotInDegs} ${centerXY} ${centerXY})`);
+            minuteHand.setAttribute('transform', `rotate(${minHandRotInDegs} ${centerXY} ${centerXY})`);
+        }
+    
+        // Initial call to display the time immediately
+        updateTime();
+    
+        // Update the time every second
+        setInterval(updateTime, 1000);
+            // ]]>
+
+    </script>
+</svg>
