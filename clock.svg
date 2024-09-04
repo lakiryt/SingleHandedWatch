@@ -63,6 +63,7 @@
         // Objects
         const face = document.getElementById('face');
         const minuteHand = document.getElementById('minuteHand');
+        const hourHand = document.getElementById('hourHand');
         // Initialize SVG
         // Face Numbers
         const svgNS = "http://www.w3.org/2000/svg"; // SVG namespace
@@ -91,6 +92,19 @@
             face.appendChild(faceMark);
         }
 
+        // Generating paths for the hands
+        // length: in px, excluding the tip, but including the backshift
+        function handPath(length, tipLength, backshift, halfWidth, roundX, roundY) {
+            return "M 500 500" + // move to center
+                " m "+halfWidth+" "+backshift+
+                " l 0 -"+length+
+                " l -"+(halfWidth-roundX)+" -"+(tipLength-roundY)+ // first half of tip
+                " q -"+roundX+" -"+roundY+" -"+(2*roundX)+" 0"+ // round tip; the second coordinate is relative to the start point, not the control point!
+                " l -"+(halfWidth-roundX)+" "+(tipLength-roundY)+ // second half of tip
+                " l 0 "+length+" z";
+        }
+        minuteHand.setAttribute("d", handPath(410, 30, 30, 8, 2, 1));
+        hourHand.setAttribute("d", handPath(220, 30, 30, 8, 2, 1));
 
         // ** Updating the time ** //
 
